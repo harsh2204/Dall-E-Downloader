@@ -50,6 +50,8 @@ def run(playwright: Playwright) -> None:
     page.locator(".create-page-header > button").click()
 
     history = page.query_selector_all(".hist-task-grid")
+
+    # Scroll all the way to the bottom of the history
     new_l, l = 0, -1
     while new_l != l:
         last_h = history[-1]
@@ -58,11 +60,10 @@ def run(playwright: Playwright) -> None:
         l = len(history)
         history = page.query_selector_all(".hist-task-grid")
         new_l = len(history)
+    # --- This is important for the active tab selector
     
     try:
         for j in range(len(history)):
-            if j != 0:
-                history = page.query_selector_all(".hist-task-grid")
             history[j].wait_for_element_state(state='stable')
             history[j].scroll_into_view_if_needed()
             history[j].click()
